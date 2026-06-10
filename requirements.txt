@@ -1,0 +1,8 @@
+asgiref==3.11.1
+debugpy==1.8.20
+Django==6.0.4
+et_xmlfile==2.0.0
+openpyxl==3.1.5
+pillow==11.1.0
+sqlparse==0.5.5
+tzdata==2026.2
