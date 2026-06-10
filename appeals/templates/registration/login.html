@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — Акимат</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a56a4 0%, #13407e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,.25);
+        }
+        .login-header {
+            background: linear-gradient(135deg, #1a56a4, #2563eb);
+            color: #fff;
+            border-radius: 16px 16px 0 0;
+            padding: 2rem;
+            text-align: center;
+        }
+        .form-control:focus { border-color: #1a56a4; box-shadow: 0 0 0 .2rem rgba(26,86,164,.2); }
+        .btn-primary { background: #1a56a4; border-color: #1a56a4; }
+        .btn-primary:hover { background: #13407e; border-color: #13407e; }
+    </style>
+</head>
+<body>
+    <div class="login-card card">
+        <div class="login-header">
+            <i class="bi bi-building fs-1 mb-2 d-block"></i>
+            <h5 class="fw-bold mb-1">Система обращений граждан</h5>
+            <p class="mb-0 opacity-75 small">Акимат</p>
+        </div>
+        <div class="card-body p-4">
+            <h6 class="fw-bold text-center mb-4 text-secondary">Вход в систему</h6>
+
+            {% if form.errors %}
+            <div class="alert alert-danger py-2 small">
+                <i class="bi bi-exclamation-circle me-1"></i>
+                Неверное имя пользователя или пароль.
+            </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small">Имя пользователя</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person text-muted"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="username" autofocus required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small">Пароль</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock text-muted"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <input type="hidden" name="next" value="{{ next }}">
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Войти
+                </button>
+            </form>
+
+            <hr class="my-3">
+            <div class="text-center small text-muted">
+                Нет аккаунта?
+                <a href="/register/" class="text-primary fw-semibold text-decoration-none">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

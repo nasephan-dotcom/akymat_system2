@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Акимат — система обращений{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 240px;
+            --brand-color: #1a56a4;
+            --brand-dark: #13407e;
+        }
+
+        body {
+            background: #f0f4f8;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0; left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--brand-color) 0%, var(--brand-dark) 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            box-shadow: 2px 0 12px rgba(0,0,0,.18);
+        }
+
+        .sidebar-brand {
+            padding: 1.4rem 1.2rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,.15);
+        }
+
+        .sidebar-brand .brand-title {
+            font-size: .95rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .sidebar-brand .brand-sub {
+            font-size: .72rem;
+            opacity: .7;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav .nav-link {
+            color: rgba(255,255,255,.8);
+            padding: .55rem 1.2rem;
+            border-radius: 0 24px 24px 0;
+            margin-right: .5rem;
+            font-size: .88rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            transition: all .15s;
+        }
+
+        .sidebar-nav .nav-link:hover,
+        .sidebar-nav .nav-link.active {
+            background: rgba(255,255,255,.18);
+            color: #fff;
+        }
+
+        .sidebar-nav .nav-label {
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: rgba(255,255,255,.4);
+            padding: .8rem 1.2rem .2rem;
+        }
+
+        .sidebar-footer {
+            padding: .8rem 1.2rem;
+            border-top: 1px solid rgba(255,255,255,.15);
+            font-size: .8rem;
+        }
+
+        /* Main content */
+        .main-wrap {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: .75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .topbar-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .page-body {
+            padding: 1.5rem;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        }
+
+        .card-header {
+            border-bottom: 1px solid #f1f5f9;
+            background: #fff;
+            border-radius: 12px 12px 0 0 !important;
+            font-weight: 600;
+            font-size: .9rem;
+            color: #1e293b;
+        }
+
+        /* Stat cards */
+        .stat-card {
+            border-radius: 12px;
+            padding: 1.1rem 1.3rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,.12);
+        }
+
+        .stat-card .stat-icon {
+            font-size: 2rem;
+            opacity: .85;
+        }
+
+        .stat-card .stat-val {
+            font-size: 1.7rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-card .stat-label {
+            font-size: .78rem;
+            opacity: .85;
+        }
+
+        /* Table */
+        .table-responsive { border-radius: 12px; overflow: hidden; }
+
+        .table thead th {
+            background: #f8fafc;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: #64748b;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+            white-space: nowrap;
+        }
+
+        .table tbody tr { transition: background .1s; }
+        .table tbody tr:hover { background: #f8fafc; }
+        .table td { vertical-align: middle; font-size: .88rem; }
+
+        /* Badges */
+        .badge-status {
+            padding: .3em .7em;
+            border-radius: 20px;
+            font-size: .75rem;
+            font-weight: 500;
+        }
+
+        /* Alerts */
+        .alert { border-radius: 10px; border: none; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-building fs-5"></i>
+            <div>
+                <div class="brand-title">Акимат</div>
+                <div class="brand-sub">Система обращений граждан</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-label">Главное</div>
+        <a href="{% url 'appeal_list' %}" class="nav-link {% if request.resolver_match.url_name == 'appeal_list' %}active{% endif %}">
+            <i class="bi bi-list-ul"></i> Все обращения
+        </a>
+        <a href="{% url 'create_appeal' %}" class="nav-link {% if request.resolver_match.url_name == 'create_appeal' %}active{% endif %}">
+            <i class="bi bi-plus-circle"></i> Создать обращение
+        </a>
+
+        {% if is_admin %}
+        <div class="nav-label">Администрирование</div>
+        <a href="/admin/" class="nav-link">
+            <i class="bi bi-gear"></i> Панель Django Admin
+        </a>
+        {% endif %}
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-white bg-opacity-25 d-flex align-items-center justify-content-center" style="width:32px;height:32px">
+                <i class="bi bi-person-fill" style="font-size:.9rem"></i>
+            </div>
+            <div>
+                <div style="font-weight:600;font-size:.82rem">{{ user.username }}</div>
+                <div style="font-size:.7rem;opacity:.7">
+                    {% if user.is_superuser %}Суперадмин
+                    {% elif user.groups.all.0 %}{{ user.groups.all.0.name }}
+                    {% else %}Пользователь{% endif %}
+                </div>
+            </div>
+        </div>
+        <form action="/accounts/logout/" method="post" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm w-100" style="background:rgba(255,255,255,.15);color:#fff;font-size:.78rem;">
+                <i class="bi bi-box-arrow-right"></i> Выйти
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- Main -->
+<div class="main-wrap">
+    <div class="topbar">
+        <span class="topbar-title">{% block page_title %}{% endblock %}</span>
+        <div class="d-flex gap-2 align-items-center">
+            {% block topbar_actions %}{% endblock %}
+        </div>
+    </div>
+
+    <div class="page-body">
+        {% if messages %}
+            {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags|default:'info' }} alert-dismissible fade show mb-3" role="alert">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+{% else %}
+    {% block auth_content %}{% endblock %}
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,88 @@
+{% extends 'appeals/base.html' %}
+
+{% block title %}Новое обращение{% endblock %}
+{% block page_title %}Создать обращение{% endblock %}
+
+{% block topbar_actions %}
+<a href="{% url 'appeal_list' %}" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-arrow-left me-1"></i> Назад
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header px-3 py-2">
+                <i class="bi bi-pencil-square me-1"></i> Новое обращение гражданина
+            </div>
+            <div class="card-body p-4">
+
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    Пожалуйста, исправьте ошибки в форме.
+                </div>
+                {% endif %}
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold small">{{ form.full_name.label }}</label>
+                            {{ form.full_name }}
+                            {% if form.full_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.full_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold small">{{ form.iin.label }}</label>
+                            {{ form.iin }}
+                            {% if form.iin.errors %}
+                            <div class="text-danger small mt-1">{{ form.iin.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">{{ form.phone.label }}</label>
+                            {{ form.phone }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">{{ form.category.label }}</label>
+                            {{ form.category }}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold small">{{ form.text.label }}</label>
+                            {{ form.text }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">{{ form.deadline.label }}</label>
+                            {{ form.deadline }}
+                        </div>
+
+                        {% if is_admin and form.assigned_to %}
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold small">{{ form.assigned_to.label }}</label>
+                            {{ form.assigned_to }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-check-lg me-1"></i> Сохранить
+                        </button>
+                        <a href="{% url 'appeal_list' %}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
